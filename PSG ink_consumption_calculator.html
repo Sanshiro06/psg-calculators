@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink Consumption Calculator - Press Systems Group</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #d63031 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        .company-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tagline {
+            font-size: 1.1em;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin: 10px 0 0 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .content-wrapper {
+            padding: 30px;
+        }
+        
+        .input-section, .result-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff6b35;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .result-section {
+            border-left-color: #2c2c2c;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 10px;
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .input-group label {
+            font-weight: 500;
+            color: #2c2c2c;
+            font-size: 0.95em;
+        }
+        
+        .input-group input, .input-group select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+            color: #2c2c2c;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .unit {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .result-group label {
+            font-weight: 600;
+            color: #2c2c2c;
+            font-size: 1.1em;
+        }
+        
+        .result-group {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .result-value {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: #ff6b35;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 2px solid #ff6b35;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #ff6b35, #d63031);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .formula-section {
+            background: #2c2c2c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #ff6b35;
+        }
+        
+        .formula-title {
+            color: #ff6b35;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .formula-list {
+            font-family: 'Courier New', monospace;
+            color: #f5f5f5;
+            line-height: 1.6;
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #666;
+        }
+        
+        .conversion-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: 0.9em;
+        }
+        
+        .conversion-note strong {
+            color: #d63031;
+        }
+        
+        .anilox-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .anilox-toggle input[type="radio"] {
+            margin: 0;
+            width: auto;
+        }
+        
+        .anilox-toggle label {
+            margin: 0;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        
+                    @media (max-width: 768px) {
+            .input-group, .result-group {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .company-name {
+                font-size: 1.4em;
+            }
+            
+            .tagline {
+                font-size: 1em;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="company-name">Press Systems Group</div>
+            <div class="tagline">Professional Printing Solutions</div>
+            <h1>🖨️ Ink Consumption Calculator</h1>
+        </div>
+        
+        <div class="content-wrapper">
+                            <div class="conversion-note">
+                <strong>หมายเหตุ:</strong> เครื่องคำนวณนี้ใช้หน่วยเมตริก (เซนติเมตร, ตารางเซนติเมตร, กิโลกรัม) 
+                ป้อนค่า Anilox Volume แล้วระบบจะคำนวณค่า GSM ที่ใกล้เคียงที่สุดอัตโนมัติ รวมทั้งปริมาณหมึกสำหรับ Ink Tray/Chamber
+            </div>
+            
+            <div class="input-section">
+                <div class="section-title">📏 Label Specifications</div>
+                
+                <div class="input-group">
+                    <label>Label Width:</label>
+                    <input type="number" id="labelWidth" value="25.400" step="0.001">
+                    <span class="unit">cm</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Label Length:</label>
+                    <input type="number" id="labelLength" value="30.480" step="0.001">
+                    <span class="unit">cm</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Percent Coverage:</label>
+                    <input type="number" id="percentCoverage" value="100" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Quantity of Labels:</label>
+                    <input type="number" id="quantityLabels" value="10000" step="1">
+                    <span class="unit">Labels</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Percent Overrun:</label>
+                    <input type="number" id="percentOverrun" value="0" step="0.1">
+                    <span class="unit">%</span>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <div class="section-title">⚙️ Printing Parameters</div>
+                
+                <div class="input-group">
+                    <label>Anilox Volume Unit:</label>
+                    <div class="anilox-toggle">
+                        <input type="radio" id="bcmUnit" name="aniloxUnit" value="bcm" checked>
+                        <label for="bcmUnit">BCM</label>
+                        <input type="radio" id="cm3Unit" name="aniloxUnit" value="cm3">
+                        <label for="cm3Unit">cm³/m²</label>
+                    </div>
+                    <span class="unit" id="aniloxUnitLabel">BCM</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Anilox Ink Volume:</label>
+                    <input type="number" id="aniloxVolume" value="2.33" step="0.01" min="0.01">
+                    <span class="unit" id="aniloxValueUnit">BCM</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Calculated GSM:</label>
+                    <input type="number" id="calculatedGSM" value="1.0" step="0.01" readonly>
+                    <span class="unit">g/m²</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Ink Tray / Chamber:</label>
+                    <input type="number" id="inkTray" value="5.0" step="0.1" min="0">
+                    <span class="unit">kg</span>
+                </div>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateInkConsumption()">
+                🧮 Calculate Ink Consumption
+            </button>
+            
+            <div class="result-section">
+                <div class="section-title">📊 Calculation Results</div>
+                
+                <div class="result-group">
+                    <label>Label Area:</label>
+                    <div class="result-value" id="labelArea">774.19</div>
+                    <span class="unit">cm²</span>
+                </div>
+                
+                <div class="result-group">
+                    <label>Coverage per Label:</label>
+                    <div class="result-value" id="coveragePerLabel">774.19</div>
+                    <span class="unit">cm²</span>
+                </div>
+                
+                <div class="result-group">
+                    <label>Total Coverage:</label>
+                    <div class="result-value" id="totalCoverage">7,741,900</div>
+                    <span class="unit">cm²</span>
+                </div>
+                
+                <div class="result-group">
+                    <label>Total Weight Used:</label>
+                    <div class="result-value" id="totalWeight">7.74</div>
+                    <span class="unit">kg</span>
+                </div>
+                
+                <div class="result-group">
+                    <label>Total Ink Required:</label>
+                    <div class="result-value" id="totalInkRequired">12.74</div>
+                    <span class="unit">kg</span>
+                </div>
+            </div>
+            
+            <div class="formula-section">
+                <div class="formula-title">📋 Anilox Volume to GSM Conversion</div>
+                <div class="formula-list">
+Anilox Volume Input → Auto-calculated GSM → Ink Weight Calculation<br>
+<br>
+Calculation Steps:<br>
+1. Enter Anilox Volume (BCM or cm³/m²)<br>
+2. System finds closest GSM value from conversion table<br>
+3. Label Area = Width × Length (cm²)<br>
+4. Coverage per Label = Label Area × (Coverage% ÷ 100)<br>
+5. Total Coverage = Width × Length × (Coverage% ÷ 100) × Quantity × (1 + Overrun% ÷ 100)<br>
+6. Total Weight = Total Coverage × Calculated GSM ÷ 1000 (kg)<br>
+<br>
+Conversion Formula:<br>
+- BCM = (GSM × 1000) / (1.25 × 0.22 × 1.55) = GSM × 2.33<br>
+- UV Ink Density: 1.25 g/cm³, Transfer Efficiency: 22%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Anilox Volume to GSM conversion tables
+        const bcmToGsmTable = {
+            0.47: 0.2, 0.70: 0.3, 0.93: 0.4, 1.17: 0.5, 1.40: 0.6,
+            1.63: 0.7, 1.86: 0.8, 2.10: 0.9, 2.33: 1.0, 2.56: 1.1,
+            2.80: 1.2, 2.91: 1.25, 3.03: 1.3, 3.26: 1.4, 3.50: 1.5,
+            3.73: 1.6, 3.96: 1.7, 4.08: 1.75, 4.19: 1.8, 4.43: 1.9,
+            4.66: 2.0, 4.89: 2.1, 5.13: 2.2, 5.24: 2.25, 5.36: 2.3,
+            5.59: 2.4, 5.83: 2.5, 6.06: 2.6, 6.29: 2.7, 6.41: 2.75,
+            6.52: 2.8, 6.76: 2.9, 7.00: 3.0, 7.23: 3.1, 7.46: 3.2,
+            7.57: 3.25, 7.69: 3.3, 7.92: 3.4, 8.16: 3.5, 8.39: 3.6,
+            8.62: 3.7, 8.74: 3.75, 8.85: 3.8, 9.09: 3.9, 9.33: 4.0,
+            9.56: 4.1, 9.79: 4.2, 10.02: 4.3, 10.25: 4.4, 10.49: 4.5,
+            10.72: 4.6, 10.95: 4.7, 11.18: 4.8, 11.41: 4.9, 11.65: 5.0,
+            12.81: 5.5, 13.98: 6.0, 15.14: 6.5, 16.31: 7.0, 17.48: 7.5, 18.64: 8.0
+        };
+        
+        const cm3ToGsmTable = {
+            0.72: 0.2, 1.08: 0.3, 1.44: 0.4, 1.81: 0.5, 2.17: 0.6,
+            2.53: 0.7, 2.89: 0.8, 3.25: 0.9, 3.61: 1.0, 3.97: 1.1,
+            4.33: 1.2, 4.51: 1.25, 4.69: 1.3, 5.06: 1.4, 5.42: 1.5,
+            5.78: 1.6, 6.14: 1.7, 6.32: 1.75, 6.50: 1.8, 6.86: 1.9,
+            7.22: 2.0, 7.58: 2.1, 7.94: 2.2, 8.13: 2.25, 8.31: 2.3,
+            8.67: 2.4, 9.03: 2.5, 9.39: 2.6, 9.75: 2.7, 9.93: 2.75,
+            10.11: 2.8, 10.47: 2.9, 10.84: 3.0, 11.20: 3.1, 11.56: 3.2,
+            11.74: 3.25, 11.92: 3.3, 12.28: 3.4, 12.64: 3.5, 13.0: 3.6,
+            13.36: 3.7, 13.54: 3.75, 13.72: 3.8, 14.08: 3.9, 14.45: 4.0,
+            14.81: 4.1, 15.17: 4.2, 15.53: 4.3, 15.89: 4.4, 16.25: 4.5,
+            16.61: 4.6, 16.97: 4.7, 17.33: 4.8, 17.69: 4.9, 18.06: 5.0,
+            19.86: 5.5, 21.67: 6.0, 23.47: 6.5, 25.28: 7.0, 27.08: 7.5, 28.89: 8.0
+        };
+        
+        function findClosestGSM(inputValue, unit) {
+            const table = unit === 'bcm' ? bcmToGsmTable : cm3ToGsmTable;
+            const keys = Object.keys(table).map(Number);
+            
+            let closestKey = keys[0];
+            let minDiff = Math.abs(inputValue - closestKey);
+            
+            for (let key of keys) {
+                const diff = Math.abs(inputValue - key);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestKey = key;
+                }
+            }
+            
+            return table[closestKey];
+        }
+        
+        function updateCalculatedGSM() {
+            const aniloxValue = parseFloat(document.getElementById('aniloxVolume').value) || 0;
+            const unit = document.querySelector('input[name="aniloxUnit"]:checked').value;
+            const calculatedGSMInput = document.getElementById('calculatedGSM');
+            
+            if (aniloxValue > 0) {
+                const gsm = findClosestGSM(aniloxValue, unit);
+                calculatedGSMInput.value = gsm;
+            }
+        }
+        
+        function updateAniloxUnitLabels() {
+            const unit = document.querySelector('input[name="aniloxUnit"]:checked').value;
+            const unitLabel = document.getElementById('aniloxUnitLabel');
+            const valueUnit = document.getElementById('aniloxValueUnit');
+            
+            if (unit === 'bcm') {
+                unitLabel.textContent = 'BCM';
+                valueUnit.textContent = 'BCM';
+            } else {
+                unitLabel.textContent = 'cm³/m²';
+                valueUnit.textContent = 'cm³/m²';
+            }
+        }
+        
+        function calculateInkConsumption() {
+            // Get input values
+            const labelWidth = parseFloat(document.getElementById('labelWidth').value) || 0;
+            const labelLength = parseFloat(document.getElementById('labelLength').value) || 0;
+            const percentCoverage = parseFloat(document.getElementById('percentCoverage').value) || 0;
+            const quantityLabels = parseFloat(document.getElementById('quantityLabels').value) || 0;
+            const percentOverrun = parseFloat(document.getElementById('percentOverrun').value) || 0;
+            const gsm = parseFloat(document.getElementById('calculatedGSM').value) || 0;
+            const inkTray = parseFloat(document.getElementById('inkTray').value) || 0;
+            
+            // Calculate results using GSM
+            const labelArea = labelWidth * labelLength; // cm²
+            const coveragePerLabel = labelArea * (percentCoverage / 100); // cm²
+            const totalCoverage = labelWidth * labelLength * (percentCoverage / 100) * quantityLabels * ((100 + percentOverrun) / 100); // cm²
+            
+            // Calculate total weight using GSM
+            // GSM is grams per square meter, convert to kg per square cm
+            const totalWeight = (totalCoverage / 10000) * gsm / 1000; // kg (convert cm² to m², then g to kg)
+            
+            // Calculate total ink required (printing + ink tray)
+            const totalInkRequired = totalWeight + inkTray;
+            
+            // Display results
+            document.getElementById('labelArea').textContent = labelArea.toFixed(2);
+            document.getElementById('coveragePerLabel').textContent = coveragePerLabel.toFixed(2);
+            document.getElementById('totalCoverage').textContent = totalCoverage.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
+            document.getElementById('totalInkRequired').textContent = totalInkRequired.toFixed(2);
+            
+            // Add animation effect
+            const resultValues = document.querySelectorAll('.result-value');
+            resultValues.forEach(element => {
+                element.style.transform = 'scale(1.05)';
+                element.style.transition = 'transform 0.3s ease';
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 300);
+            });
+        }
+        
+        // Auto-calculate when inputs change
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.id === 'aniloxVolume') {
+                        updateCalculatedGSM();
+                    }
+                    calculateInkConsumption();
+                });
+            });
+            
+            // Update calculated GSM when anilox volume or unit changes
+            document.getElementById('aniloxVolume').addEventListener('input', function() {
+                updateCalculatedGSM();
+                calculateInkConsumption();
+            });
+            
+            document.querySelectorAll('input[name="aniloxUnit"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateAniloxUnitLabels();
+                    updateCalculatedGSM();
+                    calculateInkConsumption();
+                });
+            });
+            
+            // Initial setup
+            updateAniloxUnitLabels();
+            updateCalculatedGSM();
+            calculateInkConsumption();
+        });
+    </script>
+</body>
+</html>

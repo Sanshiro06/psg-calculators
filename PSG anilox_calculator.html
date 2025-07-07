@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anilox Calculator - Press Systems Group</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .logo {
+            text-align: center;
+            background: #333333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .logo .orange {
+            color: #FF9500;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h2 {
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .input-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .output-section {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,184,148,0.3);
+        }
+        
+        .result-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-item h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .result-item p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        
+        .recommendations {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .recommendations h2 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.8em;
+        }
+        
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .recommendation-card {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9em;
+        }
+        
+        .recommendation-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1em;
+        }
+        
+        .recommendation-card p {
+            margin: 3px 0;
+            font-size: 0.85em;
+        }
+        
+        .status-excellent { border-left: 5px solid #00b894; }
+        .status-good { border-left: 5px solid #fdcb6e; }
+        .status-caution { border-left: 5px solid #e17055; }
+        
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Logo -->
+            <div class="logo">
+                PRESS SYSTEMS <span class="orange">GROUP</span>
+            </div>
+            
+            <h1>🔧 ANILOX CALCULATOR</h1>
+            <h2>by Press Systems Group</h2>
+            <p>Automatic Anilox Calculator for Flexographic Printing</p>
+        </div>
+        
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="section-title">🎯 REPRO - Plate Information</div>
+                
+                <div class="input-group">
+                    <label>Unit System</label>
+                    <select id="unitSystem" onchange="updateUnits()">
+                        <option value="metric">Metric (l/cm)</option>
+                        <option value="imperial">Imperial (l/inch)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label id="screenRulingLabel">Screen Ruling (l/cm)</label>
+                    <select id="screenRuling">
+                        <option value="">Select Screen Ruling</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Dot Percentage (%)</label>
+                    <select id="dotPercentage">
+                        <option value="">Select Dot Percentage</option>
+                        <option value="0.8">0.8%</option>
+                        <option value="1">1%</option>
+                        <option value="1.5">1.5%</option>
+                        <option value="2">2%</option>
+                        <option value="2.5">2.5%</option>
+                        <option value="3">3%</option>
+                        <option value="5">5%</option>
+                        <option value="10">10%</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Or Enter Dot Size Directly (micron)</label>
+                    <input type="number" id="customDotSize" placeholder="e.g. 19" min="1" max="500">
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateAnilox()">
+                    🔍 Calculate Anilox
+                </button>
+            </div>
+            
+            <div class="output-section">
+                <div class="section-title">⚙️ ANILOX - Results</div>
+                
+                <div id="dotSizeResult" class="result-item" style="display: none;">
+                    <h3>📏 Calculated Dot Size</h3>
+                    <p id="dotSizeValue">-</p>
+                </div>
+                
+                <div id="aniloxResult" class="result-item" style="display: none;">
+                    <h3>🎯 Recommended Anilox</h3>
+                    <p><strong id="aniloxRulingLabel">Ruling:</strong> <span id="recommendedLPI">-</span></p>
+                    <p><strong>Cell Opening:</strong> <span id="recommendedOpening">-</span> micron</p>
+                </div>
+                
+                <div id="safetyMargin" class="result-item" style="display: none;">
+                    <h3>🛡️ Safety Margin</h3>
+                    <p id="marginValue">-</p>
+                    <p id="marginStatus">-</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recommendations" id="recommendationsSection" style="display: none;">
+            <h2>📋 All Anilox Recommendations</h2>
+            <div class="recommendation-grid" id="recommendationGrid">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Screen Ruling Data
+        const screenRulingData = {
+            metric: [
+                {value: 10, label: "10 l/cm"},
+                {value: 20, label: "20 l/cm"},
+                {value: 34, label: "34 l/cm"},
+                {value: 38, label: "38 l/cm"},
+                {value: 42, label: "42 l/cm"},
+                {value: 48, label: "48 l/cm"},
+                {value: 54, label: "54 l/cm"},
+                {value: 60, label: "60 l/cm"},
+                {value: 70, label: "70 l/cm"},
+                {value: 80, label: "80 l/cm"},
+                {value: 100, label: "100 l/cm"},
+                {value: 120, label: "120 l/cm"},
+                {value: 140, label: "140 l/cm"},
+                {value: 160, label: "160 l/cm"}
+            ],
+            imperial: [
+                {value: 10, label: "25 l/inch"},
+                {value: 20, label: "50 l/inch"},
+                {value: 34, label: "86 l/inch"},
+                {value: 38, label: "100 l/inch"},
+                {value: 42, label: "110 l/inch"},
+                {value: 48, label: "120 l/inch"},
+                {value: 54, label: "140 l/inch"},
+                {value: 60, label: "150 l/inch"},
+                {value: 70, label: "175 l/inch"},
+                {value: 80, label: "200 l/inch"},
+                {value: 100, label: "250 l/inch"},
+                {value: 120, label: "300 l/inch"},
+                {value: 140, label: "350 l/inch"},
+                {value: 160, label: "400 l/inch"}
+            ]
+        };
+
+        // Anilox Data
+        const aniloxData = [
+            {lpi: 40, lcm: 10, opening: 238, volume: 250, wall: "1:20"},
+            {lpi: 150, lcm: 60, opening: 159, volume: 167, wall: "1:20"},
+            {lpi: 200, lcm: 80, opening: 119, volume: 125, wall: "1:20"},
+            {lpi: 250, lcm: 100, opening: 95, volume: 100, wall: "1:18"},
+            {lpi: 280, lcm: 110, opening: 86, volume: 91, wall: "1:16"},
+            {lpi: 310, lcm: 120, opening: 78, volume: 83, wall: "1:16"},
+            {lpi: 360, lcm: 140, opening: 67, volume: 71, wall: "1:16"},
+            {lpi: 410, lcm: 160, opening: 59, volume: 63, wall: "1:16"},
+            {lpi: 460, lcm: 180, opening: 52, volume: 56, wall: "1:14"},
+            {lpi: 500, lcm: 195, opening: 48, volume: 51, wall: "1:13"},
+            {lpi: 510, lcm: 200, opening: 46, volume: 50, wall: "1:13"},
+            {lpi: 530, lcm: 220, opening: 42, volume: 45, wall: "1:12"},
+            {lpi: 650, lcm: 255, opening: 36, volume: 39, wall: "1:12"},
+            {lpi: 720, lcm: 285, opening: 32, volume: 35, wall: "1:11"},
+            {lpi: 760, lcm: 300, opening: 30, volume: 33, wall: "1:10"},
+            {lpi: 800, lcm: 315, opening: 29, volume: 32, wall: "1:10"},
+            {lpi: 880, lcm: 340, opening: 26, volume: 29, wall: "1:8"},
+            {lpi: 930, lcm: 380, opening: 23, volume: 26, wall: "1:8"},
+            {lpi: 1000, lcm: 400, opening: 22, volume: 25, wall: "1:7"},
+            {lpi: 1100, lcm: 430, opening: 20, volume: 23, wall: "1:6"},
+            {lpi: 1200, lcm: 460, opening: 18, volume: 22, wall: "1:5"},
+            {lpi: 1300, lcm: 500, opening: 17, volume: 20, wall: "1:5"},
+            {lpi: 1500, lcm: 600, opening: 14, volume: 17, wall: "1:5"}
+        ];
+
+        // Dot Size Data
+        const dotSizeData = {
+            10: {0.8: 101, 1: 113, 1.5: 138, 2: 160, 2.5: 179, 3: 195, 5: 252, 10: 356},
+            20: {0.8: 50, 1: 56, 1.5: 69, 2: 80, 2.5: 89, 3: 98, 5: 126, 10: 178},
+            34: {0.8: 30, 1: 33, 1.5: 40, 2: 47, 2.5: 52, 3: 57, 5: 74, 10: 104},
+            38: {0.8: 27, 1: 30, 1.5: 37, 2: 42, 2.5: 47, 3: 51, 5: 67, 10: 95},
+            42: {0.8: 24, 1: 27, 1.5: 33, 2: 38, 2.5: 43, 3: 47, 5: 61, 10: 86},
+            48: {0.8: 22, 1: 24, 1.5: 30, 2: 33, 2.5: 37, 3: 41, 5: 53, 10: 75},
+            54: {0.8: 19, 1: 21, 1.5: 26, 2: 30, 2.5: 33, 3: 36, 5: 47, 10: 67},
+            60: {0.8: 17, 1: 19, 1.5: 23, 2: 27, 2.5: 30, 3: 33, 5: 43, 10: 60},
+            70: {0.8: 15, 1: 17, 1.5: 21, 2: 24, 2.5: 26, 3: 29, 5: 37, 10: 52},
+            80: {0.8: 13, 1: 14, 1.5: 17, 2: 20, 2.5: 22, 3: 24, 5: 32, 10: 45},
+            100: {0.8: 10, 1: 11, 1.5: 14, 2: 16, 2.5: 18, 3: 20, 5: 25, 10: 36},
+            120: {0.8: 8, 1: 9, 1.5: 11, 2: 13, 2.5: 14, 3: 16, 5: 20, 10: 29},
+            140: {0.8: 7, 1: 8, 1.5: 10, 2: 11, 2.5: 12, 3: 14, 5: 18, 10: 25},
+            160: {0.8: 6, 1: 7, 1.5: 9, 2: 10, 2.5: 11, 3: 12, 5: 16, 10: 22}
+        };
+
+        function updateUnits() {
+            const unitSystem = document.getElementById('unitSystem').value;
+            const screenRulingSelect = document.getElementById('screenRuling');
+            const screenRulingLabel = document.getElementById('screenRulingLabel');
+            const aniloxRulingLabel = document.getElementById('aniloxRulingLabel');
+            
+            if (unitSystem === 'metric') {
+                screenRulingLabel.textContent = 'Screen Ruling (l/cm)';
+                aniloxRulingLabel.textContent = 'Ruling:';
+            } else {
+                screenRulingLabel.textContent = 'Screen Ruling (l/inch)';
+                aniloxRulingLabel.textContent = 'Ruling:';
+            }
+            
+            screenRulingSelect.innerHTML = '<option value="">Select Screen Ruling</option>';
+            
+            screenRulingData[unitSystem].forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = item.label;
+                screenRulingSelect.appendChild(option);
+            });
+        }
+
+        function interpolateDotSize(screenRuling, dotPercent) {
+            const screenValues = Object.keys(dotSizeData).map(Number).sort((a, b) => a - b);
+            
+            if (screenRuling <= screenValues[0]) {
+                return dotSizeData[screenValues[0]][dotPercent];
+            }
+            
+            if (screenRuling >= screenValues[screenValues.length - 1]) {
+                return dotSizeData[screenValues[screenValues.length - 1]][dotPercent];
+            }
+            
+            let lower = screenValues[0];
+            let upper = screenValues[screenValues.length - 1];
+            
+            for (let i = 0; i < screenValues.length - 1; i++) {
+                if (screenRuling >= screenValues[i] && screenRuling <= screenValues[i + 1]) {
+                    lower = screenValues[i];
+                    upper = screenValues[i + 1];
+                    break;
+                }
+            }
+            
+            const lowerValue = dotSizeData[lower][dotPercent];
+            const upperValue = dotSizeData[upper][dotPercent];
+            const ratio = (screenRuling - lower) / (upper - lower);
+            
+            return Math.round(lowerValue + (upperValue - lowerValue) * ratio);
+        }
+
+        function calculateAnilox() {
+            const screenRuling = parseFloat(document.getElementById('screenRuling').value);
+            const dotPercentage = parseFloat(document.getElementById('dotPercentage').value);
+            const customDotSize = parseFloat(document.getElementById('customDotSize').value);
+            
+            let dotSize;
+            
+            if (customDotSize) {
+                dotSize = customDotSize;
+            } else if (screenRuling && dotPercentage) {
+                dotSize = interpolateDotSize(screenRuling, dotPercentage);
+            } else {
+                alert('Please enter complete information');
+                return;
+            }
+            
+            document.getElementById('dotSizeResult').style.display = 'block';
+            document.getElementById('dotSizeValue').textContent = `${dotSize} micron`;
+            
+            const suitableAnilox = aniloxData.filter(anilox => dotSize >= anilox.opening);
+            
+            if (suitableAnilox.length > 0) {
+                const recommended = suitableAnilox.reduce((prev, curr) => 
+                    Math.abs(curr.opening - dotSize) < Math.abs(prev.opening - dotSize) ? curr : prev
+                );
+                
+                document.getElementById('aniloxResult').style.display = 'block';
+                const unitSystem = document.getElementById('unitSystem').value;
+                const aniloxValue = unitSystem === 'metric' ? `${recommended.lcm} l/cm` : `${recommended.lpi} LPI`;
+                document.getElementById('recommendedLPI').textContent = aniloxValue;
+                document.getElementById('recommendedOpening').textContent = `${recommended.opening}`;
+                
+                const margin = ((dotSize - recommended.opening) / dotSize * 100).toFixed(1);
+                document.getElementById('safetyMargin').style.display = 'block';
+                document.getElementById('marginValue').textContent = `${margin}%`;
+                
+                let marginStatus = '';
+                if (margin >= 20) {
+                    marginStatus = '✅ Excellent';
+                } else if (margin >= 10) {
+                    marginStatus = '👍 Good';
+                } else if (margin >= 0) {
+                    marginStatus = '👍 Good';
+                } else {
+                    marginStatus = '❌ Dangerous';
+                }
+                document.getElementById('marginStatus').textContent = marginStatus;
+                
+                showAllRecommendations(dotSize, suitableAnilox);
+            } else {
+                alert('No suitable Anilox found. Please check your data');
+            }
+        }
+        
+        function showAllRecommendations(dotSize, suitableAnilox) {
+            document.getElementById('recommendationsSection').style.display = 'block';
+            const grid = document.getElementById('recommendationGrid');
+            grid.innerHTML = '';
+            
+            const recommended = suitableAnilox.reduce((prev, curr) => 
+                Math.abs(curr.opening - dotSize) < Math.abs(prev.opening - dotSize) ? curr : prev
+            );
+            
+            const minRuling = recommended.lpi * 0.8;
+            const extendedAnilox = aniloxData.filter(anilox => 
+                anilox.lpi >= minRuling && (dotSize >= anilox.opening || anilox.lpi <= recommended.lpi)
+            );
+            
+            extendedAnilox.sort((a, b) => b.lpi - a.lpi);
+            
+            extendedAnilox.slice(0, 8).forEach(anilox => {
+                const margin = ((dotSize - anilox.opening) / dotSize * 100).toFixed(1);
+                const rulingDiff = ((recommended.lpi - anilox.lpi) / recommended.lpi * 100).toFixed(1);
+                
+                let statusClass = '';
+                let statusText = '';
+                
+                if (dotSize >= anilox.opening) {
+                    if (margin >= 20) {
+                        statusClass = 'status-excellent';
+                        statusText = '✅ Excellent';
+                    } else if (margin >= 10) {
+                        statusClass = 'status-good';
+                        statusText = '👍 Good';
+                    } else if (margin >= 0) {
+                        statusClass = 'status-good';
+                        statusText = '👍 Good';
+                    }
+                } else {
+                    statusClass = 'status-caution';
+                    statusText = '⚠️ Caution: Dot Dipping';
+                }
+                
+                const unitSystem = document.getElementById('unitSystem').value;
+                const aniloxTitle = unitSystem === 'metric' ? `${anilox.lcm} l/cm` : `${anilox.lpi} LPI`;
+                
+                const card = document.createElement('div');
+                card.className = `recommendation-card ${statusClass}`;
+                
+                let cardContent = `
+                    <h3>${aniloxTitle}</h3>
+                    <p><strong>Opening:</strong> ${anilox.opening} μ</p>
+                    <p><strong>Wall:</strong> ${anilox.wall}</p>
+                `;
+                
+                if (dotSize >= anilox.opening) {
+                    cardContent += `<p><strong>Margin:</strong> ${margin}%</p>`;
+                } else {
+                    cardContent += `<p><strong>Gap:</strong> -${Math.abs(margin)}%</p>`;
+                    cardContent += `<p><strong>Lower by:</strong> ${rulingDiff}%</p>`;
+                }
+                
+                cardContent += `<p><strong>Status:</strong> ${statusText}</p>`;
+                
+                card.innerHTML = cardContent;
+                grid.appendChild(card);
+            });
+        }
+
+        // Event listeners
+        document.getElementById('customDotSize').addEventListener('input', function() {
+            if (this.value) {
+                document.getElementById('screenRuling').value = '';
+                document.getElementById('dotPercentage').value = '';
+            }
+        });
+        
+        document.getElementById('screenRuling').addEventListener('change', clearCustomDot);
+        document.getElementById('dotPercentage').addEventListener('change', clearCustomDot);
+        
+        function clearCustomDot() {
+            if (document.getElementById('screenRuling').value || document.getElementById('dotPercentage').value) {
+                document.getElementById('customDotSize').value = '';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUnits();
+        });
+    </script>
+</body>
+</html>
